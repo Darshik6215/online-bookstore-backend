@@ -1,0 +1,16 @@
+export enum COMMON_MESSAGE {
+  Success = "✅ Success",
+  InActive = "❌ Your account is inactive. Please contact admin for activation.",
+  Unauthorized = "❌ Unauthorized access.",
+  Not_Found = "❌ ${param} Not Found",
+  MONGOOSE_ID_VALIDATION = "❌ Invalid id",
+  Already_exist = "❌ ${param} already exist",
+  Not_exist = "❌ ${param} not exist",
+  Invalid = "❌ Invalid ${param}",
+  Error = "❌ Something went wrong.",
+  SessionExpired = "❌ Session expired, Please login again.",
+  Forbidden = "❌ You are not allowed to access this resource",
+  ServerError = "❌ Internal Server Error",
+  All_Fields = "❌ All fields are required",
+  EMAIL_PASSWORD = "❌ Email or Password is incorrect",
+}

@@ -3,6 +3,7 @@ import User from "../models/user.model";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { USER_ROLE } from "../models/types/user.types";
+import { COMMON_MESSAGE } from "../utils/messages.enum";
 
 export const registerUserService = async (
   req: Request,
@@ -14,9 +15,7 @@ export const registerUserService = async (
 
     if (existingAdmin) {
       if (!req.user || req.user.role !== USER_ROLE.ADMIN) {
-        res.status(403).json({
-          message: "❌ Forbidden: Only admins can create new users",
-        });
+        res.status(403).json(COMMON_MESSAGE.Forbidden);
         return;
       }
     }
@@ -25,26 +24,24 @@ export const registerUserService = async (
       req.body;
 
     if (!firstName || !lastName || !email || !password || !phone || !address) {
-      res.status(400).json({
-        message: "❌ All required fields must be provided",
-      });
+      res.status(400).json(COMMON_MESSAGE.All_Fields);
       return;
     }
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      res.status(409).json({
-        message: "❌ A user already exists with this email",
-      });
+      res
+        .status(409)
+        .json(COMMON_MESSAGE.Already_exist.replace("${param}", "Email"));
       return;
     }
 
     if (role === USER_ROLE.ADMIN) {
       const adminExists = await User.findOne({ role: USER_ROLE.ADMIN });
       if (adminExists) {
-        res.status(409).json({
-          message: "❌ Admin already exists",
-        });
+        res
+          .status(409)
+          .json(COMMON_MESSAGE.Already_exist.replace("${param}", "Admin"));
         return;
       }
     }
@@ -69,14 +66,12 @@ export const registerUserService = async (
       }
     );
 
-    res.status(201).json({
-      message: "✅ User registered successfully",
-      user: newUser,
-      token,
-    });
+    res
+      .status(201)
+      .json({ message: COMMON_MESSAGE.Success, user: newUser, token });
   } catch (error: any) {
     res.status(500).json({
-      message: "❌ Failed to register user",
+      message: COMMON_MESSAGE.ServerError,
       error: error.message,
     });
   }
@@ -91,23 +86,20 @@ export const loginUserService = async (
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({
-        message: "❌ All fields are required",
-      });
+      res.status(400).json(COMMON_MESSAGE.All_Fields);
+      return;
     }
 
     const existingUser = await User.findOne({ email });
     if (!existingUser) {
-      return res.status(401).json({
-        message: "❌ Email or Password is incorrect",
-      });
+      res.status(401).json(COMMON_MESSAGE.EMAIL_PASSWORD);
+      return;
     }
 
     const isMatch = await bcrypt.compare(password, existingUser.password);
     if (!isMatch) {
-      return res.status(401).json({
-        message: "❌ Email or Password is incorrect",
-      });
+      res.status(401).json(COMMON_MESSAGE.EMAIL_PASSWORD);
+      return;
     }
 
     const token = jwt.sign(
@@ -121,13 +113,13 @@ export const loginUserService = async (
     );
 
     res.status(200).json({
-      message: "✅ Login successful",
+      message: COMMON_MESSAGE.Success,
       user: hidePassword,
       token,
     });
   } catch (error: any) {
     res.status(500).json({
-      message: "❌ Login failed",
+      message: COMMON_MESSAGE.ServerError,
       error: error.message,
     });
   }
