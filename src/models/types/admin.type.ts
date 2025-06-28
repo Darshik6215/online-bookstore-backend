@@ -8,5 +8,5 @@ export type Admin = {
   password: string;
   firstName: string;
   lastName: string;
-  role: Role;
+  role?: Role;
 };

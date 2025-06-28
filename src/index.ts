@@ -1,6 +1,8 @@
 import { config } from "dotenv";
 import express from "express";
 import { connectDB } from "./config/db";
+import { COMMON_ROUTE } from "./utils/route.enum";
+import { userRouter } from "./routes/user.route";
 
 config();
 
@@ -15,6 +17,7 @@ app.use(express.json());
 connectDB();
 
 // Routes
+app.use(COMMON_ROUTE.auth, userRouter);
 
 // Port
 app.listen(PORT, () => {

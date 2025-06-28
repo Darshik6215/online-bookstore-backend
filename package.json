@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/index.ts"
+    "dev": "nodemon src/index.ts",
+    "roleSeeder": "npx ts-node src/database/seed/roleSeeder.ts"
   },
   "keywords": [],
   "author": "",
@@ -14,8 +15,7 @@
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.16.0",
-    "ts-node": "^10.9.2"
+    "mongoose": "^8.16.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
@@ -23,6 +23,8 @@
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/mongoose": "^5.11.97",
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
   }
 }

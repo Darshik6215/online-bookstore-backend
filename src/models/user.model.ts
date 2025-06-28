@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { User } from "./types/user.types";
+import { User, USER_ROLE } from "./types/user.types";
 
 const addressSchema = new Schema({
   street: { type: String },
@@ -19,8 +19,8 @@ const userSchema = new Schema<User>(
     address: { type: [addressSchema], required: true },
     role: {
       type: String,
-      enum: ["user", "admin"],
-      default: "user",
+      enum: Object.values(USER_ROLE),
+      default: USER_ROLE.USER,
     },
   },
   { timestamps: true }

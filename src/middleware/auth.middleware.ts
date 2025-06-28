@@ -7,7 +7,7 @@ config();
 declare global {
   namespace Express {
     interface Request {
-      user?: JwtPayload & { id: string };
+      user?: JwtPayload & { id: string; role: string };
     }
   }
 }
@@ -18,20 +18,25 @@ export const authMiddleware = async (
   next: NextFunction
 ) => {
   try {
-    const token = req.headers.authorization?.split(" ")[1];
+    const authHeader = req.headers.authorization;
 
-    if (!token) {
-      return res.status(401).json({ message: "Unauthorized: Token missing" });
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      res.status(401).json({ message: "Unauthorized: Token missing" });
+      return;
     }
 
-    const decode = jwt.verify(
+    const token = authHeader.split(" ")[1];
+
+    const decoded = jwt.verify(
       token,
       process.env.JWT_SECRET as string
-    ) as JwtPayload & { id: string };
+    ) as JwtPayload & { id: string; role: string };
 
-    req.user = decode;
+    req.user = decoded;
+
     next();
   } catch (error) {
-    return res.status(401).json({ message: "Unauthorized: Invalid token" });
+    res.status(401).json({ message: "Unauthorized: Invalid token" });
+    return;
   }
 };

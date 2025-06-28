@@ -1,3 +1,8 @@
+export enum USER_ROLE {
+  USER = "user",
+  ADMIN = "admin",
+}
+
 interface Address {
   street: string;
   city: string;
@@ -13,5 +18,5 @@ export type User = {
   password: string;
   phone: string;
   address: Address[];
-  role?: "user" | "admin";
+  role?: USER_ROLE;
 };
